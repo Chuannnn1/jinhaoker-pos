@@ -1,6 +1,6 @@
-# 🍱 金濠客食堂 POS 系統
+# 金濠客食堂 POS 系統 — Next.js 版本
 
-> 嘉義最強食堂的 POS 系統 — 前台點餐 + 後台管理
+> 前台點餐 + 後台管理，Next.js 14 App Router 全端解決方案
 
 [![GitHub Repo](https://img.shields.io/badge/GitHub-公開 Repo-blue?style=flat-square&logo=github)](https://github.com/Chuannnn1/jinhaoker-pos)
 
@@ -10,128 +10,102 @@
 
 ## 🎯 專案目標
 
-一套輕量、好上手、團隊友善的 POS 系統：
+一套輕量、快、好實作的 POS 系統：
 - **前台點餐**（顧客自行點餐）
-- **後台管理**（營運儀表板、訂單、菜單、庫存管理）
+- **後台管理**（營運儀表板、訂單、菜單、庫存）
 
 ---
 
-## 🚀 快速開始（10 秒）
+## 🚀 快速開始（5 分鐘）
 
 ```bash
 git clone https://github.com/Chuannnn1/jinhaoker-pos.git
 cd jinhaoker-pos
-bash scripts/setup.sh
+npm install
+npm run db:init
+npm run dev
 ```
 
-**需要兩個終端機：**
-```bash
-# Terminal 1 — 後端 API（Port 3000）
-cd backend && npm run dev
-
-# Terminal 2 — 前端（Port 5173）
-cd frontend && npm run dev
-```
-
-> ⚡ Production 模式：`cd frontend && npm run build`，然後 `cd backend && npm start`，全部從 Port 3000 提供。
+**伺服器啟動後：**
+- 前台：`http://localhost:3100`
+- 後台：`http://localhost:3100/admin/dashboard`
+- API: `http://localhost:3100/api/health`
 
 ---
 
-## 🏗️ 專案結構
+## 🏗️ 專案結構（Next.js 14 App Router）
 
 ```
 jinhaoker-pos/
-├── backend/              ← Express + SQLite 後端
-│   ├── src/
-│   │   ├── db/           ← SQL schema + seed + connection
-│   │   ├── routes/        ← API 路由
-│   │   ├── services/      ← 商業邏輯
-│   │   └── middleware/   ← 錯誤處理
-├── frontend/             ← React + Vite + Tailwind 前端
-│   ├── src/
-│   │   ├── pages/        ← 頁面元件
-│   │   ├── components/   ← 共用元件
-│   │   └── api/          ← API 客戶端
-├── docs/                 ← 文件
-│   ├── SPEC.md           ← 功能規格
-│   ├── API.md            ← API Endpoint 文件
-│   └── ADR.md            ← 技術選型理由（為什麼這樣選）
-├── scripts/
-│   └── setup.sh          ← 一鍵安裝腳本
-└── .github/
-    └── PULL_REQUEST_TEMPLATE.md
+├── app/                    ← Next.js pages + API（App Router）
+│   ├── api/               ← API Routes（替換 Express routes）
+│   │   ├── menu/route.js      (GET/POST /api/menu)
+│   │   ├── orders/route.js    (GET/POST /api/orders)
+│   │   ├── inventory/route.js
+│   │   ├── purchase-orders/route.js
+│   │   └── suppliers/route.js
+│   ├── admin/             ← 後台頁面
+│   │   ├── layout.jsx       (Sidebar 佈局)
+│   │   └── dashboard/page.jsx
+│   ├── layout.jsx           (Root layout)
+│   └── page.jsx             (前台點餐頁)
+├── lib/                   ← 核心功能
+│   ├── db.js              (SQLite 連線)
+│   ├── schema.sql         (資料表結構)
+│   └── seed.sql           (測試資料)
+├── components/
+│   └── layout/
+│       └── AdminLayout.jsx
+├── public/               ← 靜態資源
+└── docs/                 ← 文件
 ```
 
 ---
 
-## 📦 技術棧（為什麼這樣選？）
+## 📦 Next.js 架構優勢（vs 之前 Express 版）
 
-| 層面 | 選擇 | 為什麼 |
-|------|------|--------|
-| 後端 | Express (Node.js) | 零配置、組員最熟悉 JS |
-| 資料庫 | SQLite (better-sqlite3) | 零安裝、單一檔案、不需 Docker |
-| 前端 | React 18 + Vite | HMR 快、React 生態最大 |
-| 樣式 | Tailwind CSS | Utility-first 開發快 |
-| 圖表 | Recharts | React-native API |
-| 圖示 | Lucide React | Tree-shakable、風格統一 |
-
-> 詳細選型理由 → [docs/ADR.md](docs/ADR.md)
+| 特性 | Express 版（舊） | Next.js 版（新） |
+|------|----------------|-----------------|
+| **Port** | 前端 5173 + 後端 3000 | **單一 Port 3100** |
+| **部署** | 兩個程序，需要 Nginx 整合 | **一個命令 `next start`** |
+| **路由** | Express Router + React Router | **Next.js App Router（檔案即路由）** |
+| **SSR** | ❌ 純 SPA | ✅ 可 SSR/SSG/ISR |
+| **額外配置** | 需要 proxy 跨域 | ✅ 內建 API Proxy |
 
 ---
 
-## 🧑‍💻 團隊分工
+## 🧑‍💻 分工表
 
-> ⚠️ **重要**：開始做任何功能前，請先看 [docs/SPEC.md](docs/SPEC.md) 和 [CONTRIBUTING.md](CONTRIBUTING.md)！
-
-| 模組 | 負責人 | 說明 | API 文件 | 前台頁面 |
-|------|--------|------|---------|----------|
-| **前台點餐** | Chuannnn + Atlas | 顧客點餐流程 | — | `/` |
-| **後台管理** | Chuannnn + Atlas | 管理面板 UI | — | `/admin/*` |
-| **Menu CRUD** | **Chuannnn** | 菜單增刪改查、分類 | `GET/POST/PUT/DELETE /api/menu` | `/admin/menu` + 前台 |
-| **Orders** | ⏳ 待分配 | 訂單建立、狀態流轉、庫存扣補 | `GET/POST/PUT/PATCH /api/orders` | `/admin/orders` |
-| **Inventory** | ⏳ 待分配 | 食材管理、低庫存警示 | `GET/PUT /api/inventory` | `/admin/inventory` |
-| **Purchasing** | ⏳ 待分配 | 採購單、驗貨入庫、退貨 | `GET/POST /api/purchase-orders` | TBD |
-| **Suppliers** | ⏳ 待分配 | 供應商管理 | `GET/POST/PUT /api/suppliers` | TBD |
-
-### 🔥 Menu 模組特別說明（Chuannnn 負責）
-> 這個模組的 CRUD API 和 UI 交給 Chuannnn 負責，架構和 schema 已由 Atlas 幫你鋪好。
-> 詳細規格 → [docs/SPEC.md](docs/SPEC.md)
+| 模組 | 負責人 | API 文件 |
+|------|--------|---------|
+| **前台點餐** | Chuannnn + Atlas | — |
+| **後台管理** | Chuannnn + Atlas | — |
+| **Menu API** | **Chuannnn** | [`docs/API.md`](docs/API.md) |
+| **Orders API** | ⏳ 開放認領 | [`docs/API.md`](docs/API.md) |
+| **Inventory API** | ⏳ 開放認領 | [`docs/API.md`](docs/API.md) |
+| **Purchasing API** | ⏳ 開放認領 | [`docs/API.md`](docs/API.md) |
 
 ---
 
 ## 🌿 Git 開發流程
 
-請先看完這支影片再開始開發：
-**📺 [Git Branch 教學影片](https://youtu.be/P-nbNgIzlYE)**
-
-### 標準流程
+**先看影片** → [Git Branch 教學](https://youtu.be/P-nbNgIzlYE)
 
 ```bash
-# 1. 從 main 開新分支
-git checkout -b feature/menu-crud
+# 1. 開分支（從 main）
+git checkout -b feature/orders-api
 
-# 2. 實作完成後 commit
+# 2. 寫 code...
+
+# 3. Commit
 git add .
-git commit -m "feat: 完成 Menu CRUD API"
+git commit -m "feat: 完成訂單 API"
 
-# 3. 推到 GitHub
-git push -u origin feature/menu-crud
+# 4. Push
+git push -u origin feature/orders
 
-# 4. 到 GitHub 開 Pull Request
-# → https://github.com/Chuannnn1/jinhaoker-pos
-
-# 5. 等 Code Review 通過後合併到 main
+# 5. GitHub 上開 Pull Request
 ```
-
-### Branch 命名規範
-```bash
-feature/menu-crud          ← 新功能
-feature/order-status-flow  ← 新功能
-fix/inventory-bug          ← Bug 修復
-docs/api-update            ← 文件更新
-```
-
-> 完整規範 → [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ---
 
@@ -139,44 +113,40 @@ docs/api-update            ← 文件更新
 
 | 文件 | 說明 |
 |------|------|
-| [docs/SPEC.md](docs/SPEC.md) | 完整功能規格（先讀這個） |
-| [docs/API.md](docs/API.md) | API Endpoint 文件 |
-| [docs/ADR.md](docs/ADR.md) | 技術選型決策記錄（為什麼這樣選） |
-| [CONTRIBUTING.md](CONTRIBUTING.md) | Git 規範、PR 流程 |
+| [ONBOARDING.md](ONBOARDING.md) | 組員入門摘要（必看） |
+| [docs/SPEC.md](docs/SPEC.md) | 功能規格 |
+| [docs/API.md](docs/API.md) | API 端點文件 |
+| [docs/ADR.md](docs/ADR.md) | 技術選型理由（Andre 001: Next.js） |
 
 ---
 
-## ✅ Onboarding Checklist
+## ✅ Before You Start
 
-- [ ] `bash scripts/setup.sh` 執行成功
-- [ ] `npm run dev` 後端啟動正常 → `http://localhost:3000/api/health` 回傳 `{ "success": true }`
-- [ ] 前端 `http://localhost:5173` 看得到點餐頁面
-- [ ] 後台 `http://localhost:5173/admin/dashboard` 有資料
-- [ ] 看過 [docs/SPEC.md](docs/SPEC.md)
-- [ ] 看過 [CONTRIBUTING.md](CONTRIBUTING.md)
-- [ ] 看過 [📺 Git Branch 教學影片](https://youtu.be/P-nbNgIzlYE)
+- [ ] `npm install` 完成
+- [ ] `npm run db:init` 完成
+- [ ] `http://localhost:3100` 看得點餐頁
+- [ ] `http://localhost:3100/admin/dashboard` 看得儀表板
+- [ ] 看過 [ONBOARDING.md](ONBOARDING.md)
+- [ ] 看過 [Git 影片](https://youtu.be/P-nbNgIzlYE)
 
 ---
 
-## 🌟 API 測試範例
+## API 測試範例
 
 ```bash
 # Health
-curl http://localhost:3000/api/health
+curl http://localhost:3100/api/health
 
 # 取得菜單
-curl http://localhost:3000/api/menu
+curl http://localhost:3100/api/menu
 
 # 建立訂單
-curl -X POST http://localhost:3000/api/orders \
+curl -X POST http://localhost:3100/api/orders \
   -H "Content-Type: application/json" \
-  -d '{"customer_name":"王小明","items":[{"item_id":1,"quantity":2}]}'
+  -d '{"customer_name":"測試","items":[{"item_id":1,"quantity":1}]}'
 
-# 查看訂單
-curl http://localhost:3000/api/orders
-
-# 更新狀態（pending → cooking）
-curl -X PATCH http://localhost:3000/api/orders/202605100003/status \
+# 訂單狀態更新
+curl -X PATCH http://localhost:3100/api/orders/202605100003/status \
   -H "Content-Type: application/json" \
   -d '{"status":"cooking"}'
 ```
@@ -185,6 +155,6 @@ curl -X PATCH http://localhost:3000/api/orders/202605100003/status \
 
 ## 📞 問題？
 
-- **技術問題** → 開 Issue 或直接問
-- **功能需求** → 先看 [docs/SPEC.md](docs/SPEC.md) 確認規格
-- **PR 被拒** → 看 [CONTRIBUTING.md](CONTRIBUTING.md) 確認規範
+- **技術問題** → GitHub 開 Issue
+- **功能需求** → 先看 [SPEC.md](docs/SPEC.md)
+- **PR 被拒** → 看 [ONBOARDING.md](ONBOARDING.md)

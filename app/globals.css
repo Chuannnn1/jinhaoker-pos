@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #FF6B35;
+  --primary-dark: #E85D2C;
+  --primary-light: #FF8A5C;
+  --sidebar-bg: #1A1D23;
+  --page-bg: #F5F6FA;
+  --card-bg: #FFFFFF;
+}
+
+body {
+  background: var(--page-bg);
+  color: #1a1a1a;
+}
+
+/* 滾動條美化 */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
+}

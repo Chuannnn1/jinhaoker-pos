@@ -1,0 +1,33 @@
+{
+  "name": "jinhaoker-pos",
+  "version": "1.0.0",
+  "description": "金濠客食堂 POS 系統 — Next.js 14 + SQLite",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev -p 3100",
+    "build": "next build",
+    "start": "next start -p 3100",
+    "lint": "next lint",
+    "db:init": "node lib/db/init.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.8.1",
+    "lucide-react": "^0.468.0",
+    "next": "^16.2.6",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "recharts": "^2.15.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.19.18",
+    "@types/react": "18.3.28",
+    "@types/react-dom": "^18.3.5",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "14.2.18",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
+    "typescript": "6.0.3"
+  }
+}
