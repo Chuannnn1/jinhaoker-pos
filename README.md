@@ -4,6 +4,8 @@
 
 [![GitHub Repo](https://img.shields.io/badge/GitHub-公開 Repo-blue?style=flat-square&logo=github)](https://github.com/Chuannnn1/jinhaoker-pos)
 
+> 📖 **組員必看** → [ONBOARDING.md](ONBOARDING.md) — 環境安裝、分工、Git 流程 5 分鐘搞懂
+
 ---
 
 ## 🎯 專案目標
