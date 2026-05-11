@@ -86,7 +86,62 @@
 
 ---
 
-## 7. 資料流保證（Pre-Ship Checklist）
+## 7. 外送員通知（⏳ 暫不開發，spec 先收）
+
+### 功能描述
+當訂單狀態更新為「外送中 (delivering)」時，系統自動通知外送員。
+
+### 實作方案（暫定）
+- **工具**：n8n (workflow automation)
+- **觸發點**：`PATCH /api/orders/:id/status → delivering`
+- **通知方式**：待確定（LINE Notify / Telegram Bot / WebSocket）
+- **被通知者**：外送員（需先定義外送員名單或群組）
+
+### 整合流程（草稿）
+```
+訂單狀態 → delivering
+    ↓
+Next.js 發出 webhook → n8n 接收
+    ↓
+n8n 判斷通知對象 → 發送通知
+    ↓
+外送員收到通知 → 接單外送
+```
+
+### 待釐清事項
+- [ ] 外送員用什麼方式接收通知？（LINE / Telegram / SMS）
+- [ ] 通知內容要包含什麼？（訂單摘要、地址、金額）
+- [ ] n8n 要自架還是用 cloud？
+- [ ] 外送員名單從哪裡來？（DB？設定檔？）
+
+### 狀態
+⏳ **本功能已納入 spec，但暫不開發。** 等決定要做再開工。
+
+---
+
+## 8. 部署方案
+
+### 方案 A：Tailscale 內網（推薦）
+```bash
+# 在任何有 Tailscale 的機器上跑
+nohup npm run dev > pos.log 2>&1 &
+# 透過 Tailscale IP 連線
+```
+
+### 方案 B：別台主機
+```bash
+# 需設開機自啟 + 防火牆 port 3100
+npm install -g pm2
+pm2 start npm --name "pos" -- dev
+pm2 save
+```
+
+### 方案 C：本機開發
+最簡單，關機就沒了。
+
+---
+
+## 9. 資料流保證（Pre-Ship Checklist）
 
 - [x] 所有跨表寫入包在 transaction 內
 - [x] API 回傳統一 `{ success, data/error }` 格式
