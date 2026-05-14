@@ -1,0 +1,22 @@
+[Unit]
+Description=金濠客食堂 POS 系統
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/opt/jinhaoker-pos
+Environment="NODE_ENV=production"
+Environment="PORT=3100"
+Environment="DB_PATH=./data/jinhaoker.db"
+ExecStart=/usr/bin/node /opt/jinhaoker-pos/node_modules/.bin/next start -p 3100
+Restart=always
+RestartSec=10
+StandardOutput=append:/var/log/jinhaoker-pos/pos.log
+StandardError=append:/var/log/jinhaoker-pos/pos-error.log
+
+# 資源限制
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target

@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts'
-import { getDb, generateOrderId } from '@/lib/db'
+// db import removed — client component cannot import better-sqlite3
 
 const COLORS = ['#FF6B35', '#4CAF50', '#2196F3', '#FFC107', '#9C27B0']
 
